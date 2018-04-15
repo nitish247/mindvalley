@@ -20,6 +20,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".ShowImageActivity">
+
+        </activity>
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="e26dbef9012ca79c0542762fda44cae7449dad77" />

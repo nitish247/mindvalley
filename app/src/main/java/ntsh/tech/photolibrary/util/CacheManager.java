@@ -13,6 +13,7 @@ import java.util.concurrent.ConcurrentLinkedDeque;
 
 public class CacheManager {
 
+    //Static instance of CacheManager to be used across the application (uses Singleton Pattern)
     private static CacheManager cacheManager = new CacheManager();
 
     //Using thread-safe implementation of dequeue
@@ -55,16 +56,16 @@ public class CacheManager {
         if(bitmap==null)
             return false;
         long size = bitmap.getByteCount();
-        if(size>MAX_CACHE)
+        if(size>MAX_CACHE)      //if the image is larger than cache size
             return false;
 
-        if(size>getAvailableCacheSize()) {
+        if(size>getAvailableCacheSize()) {      //if the image size is larger than available cache size
             while(size>getAvailableCacheSize()){
-                removeLeastUsedImageFromCache();
+                removeLeastUsedImageFromCache();    //free some cache space by removing least used images
             }
         }
 
-        imageUsageQueue.addFirst(url);
+        imageUsageQueue.addLast(url);
         imageCache.put(url, bitmap);
         cacheSize += size;
         Log.d("CACHE_SIZE", String.valueOf(cacheSize/1024) + " KB");
@@ -84,7 +85,7 @@ public class CacheManager {
             }
         }
 
-        jsonUsageQueue.addFirst(url);
+        jsonUsageQueue.addLast(url);
         jsonCache.put(url, json);
         cacheSize += size;
         Log.d("CACHE_SIZE", String.valueOf(cacheSize/1024) + " KB");
@@ -104,7 +105,7 @@ public class CacheManager {
             }
         }
 
-        textUsageQueue.addFirst(url);
+        textUsageQueue.addLast(url);
         textCache.put(url, text);
         cacheSize += size;
         Log.d("CACHE_SIZE", String.valueOf(cacheSize/1024) + " KB");
@@ -142,9 +143,9 @@ public class CacheManager {
         synchronized (this) {
             Log.d("CACHE_MAX", "Cache max size exceeded");
             String leastUrl = imageUsageQueue.getLast();
-            imageUsageQueue.removeLast();
+            imageUsageQueue.removeLast();       //remove least used element from the queue
             Bitmap leastUsedBitmap = imageCache.get(leastUrl);
-            long size = leastUsedBitmap.getByteCount();
+            long size = leastUsedBitmap.getByteCount();     //remove the bitmap from the cache
             cacheSize -= size;
             imageCache.remove(leastUrl);
         }

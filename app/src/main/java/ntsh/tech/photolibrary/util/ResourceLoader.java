@@ -15,6 +15,7 @@ import java.io.File;
 
 public class ResourceLoader {
 
+    //Single instance of the ResourceLoader to be used across the application (uses Singleton Pattern)
     private static ResourceLoader loader = new ResourceLoader();
 
     private ResourceLoader() {
@@ -26,6 +27,8 @@ public class ResourceLoader {
         return loader;
     }
 
+
+    //For abstract loading of images directly on ImageView with ID
     public void loadImage(final Context context, final String url, final int idImageView, final ImageLoaderListener responseListener) {
         ImageDownloader downloadTask = new ImageDownloader(new DownloaderTasks<Bitmap>() {
             @Override
@@ -57,6 +60,7 @@ public class ResourceLoader {
         downloadTask.fetch();
     }
 
+    //For abstract loading of images directly on ImageView using the reference
     public void loadImage(final Context context, final String url, final ImageView imageView, final ImageLoaderListener responseListener) {
         ImageDownloader downloadTask = new ImageDownloader(new DownloaderTasks<Bitmap>() {
             @Override
@@ -87,6 +91,7 @@ public class ResourceLoader {
         downloadTask.fetch();
     }
 
+    //For abstract loading of JSON
     public void loadJSON(final Context context, final String url, final LoaderResponseListener<JSONObject> responseListener) {
         JSONDownloader jsonDownloader = new JSONDownloader(new DownloaderTasks<JSONObject>() {
             @Override
@@ -115,6 +120,7 @@ public class ResourceLoader {
         jsonDownloader.fetch();
     }
 
+    //For abstract loading of plain text (XML, HTML etc.)
     public void loadPlainText(final Context context, final String url, final LoaderResponseListener<String> responseListener) {
         PlainTextDownloader textDownloader = new PlainTextDownloader (new DownloaderTasks<String>() {
             @Override
@@ -143,6 +149,7 @@ public class ResourceLoader {
         textDownloader.fetch();
     }
 
+    //For abstract downloading of files (need to provide URL and fileName on internal storage)
     public void downloadFile(final Context context, final String url, final String fileName, final LoaderResponseListener<File> responseListener) {
         FileDownloader fileDownloader = new FileDownloader(new DownloaderTasks<File>() {
             @Override

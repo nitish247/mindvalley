@@ -5,6 +5,7 @@ package ntsh.tech.photolibrary;
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,10 +21,12 @@ import ntsh.tech.photolibrary.util.ResourceLoader;
 public class CustomGrid extends BaseAdapter{
     private Context mContext;
     private final List<String> imageUrls;
+    private final List<String> largeUrls;
 
-    public CustomGrid(Context c, List<String> imageUrls) {
+    public CustomGrid(Context c, List<String> imageUrls, List<String> largeUrls) {
         mContext = c;
         this.imageUrls = imageUrls;
+        this.largeUrls = largeUrls;
     }
 
     @Override
@@ -45,7 +48,7 @@ public class CustomGrid extends BaseAdapter{
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         // TODO Auto-generated method stub
         View grid;
         LayoutInflater inflater = (LayoutInflater) mContext
@@ -55,6 +58,16 @@ public class CustomGrid extends BaseAdapter{
 
             grid = inflater.inflate(R.layout.grid_item, null);
             ImageView imageView = (ImageView)grid.findViewById(R.id.grid_image);
+
+            grid.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(mContext, ShowImageActivity.class);
+                    intent.putExtra(ShowImageActivity.LARGE_URL, largeUrls.get(position));
+                    mContext.startActivity(intent);
+                }
+            });
+
             ResourceLoader.getInstance().loadImage(mContext, imageUrls.get(position), imageView, new ImageLoaderListener() {
                 @Override
                 public void onFailure(int imageView, int failureCode) {

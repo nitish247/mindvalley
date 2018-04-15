@@ -1,12 +1,7 @@
 package ntsh.tech.photolibrary.util;
 
-import android.content.SyncStatusObserver;
-import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.util.Log;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.io.output.StringBuilderWriter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,10 +28,10 @@ public class JSONDownloader extends AsyncTask<String, Void, JSONObject> {
 
     public void fetch() {
         JSONObject jsonFromCache = CacheManager.getInstance().checkJsonInCache(mUrl);
-        if(jsonFromCache==null){
+        if(jsonFromCache==null){    //fetch JSON from the server upon cache miss
             this.execute(mUrl);
         }
-        else {
+        else {  //fetch JSON from cache upon cache hit
             this.onPostExecute(jsonFromCache);
             Log.d("Cache", "Found json in cache");
         }
@@ -65,7 +60,8 @@ public class JSONDownloader extends AsyncTask<String, Void, JSONObject> {
                 jsonBuilder.append(new String(contents, 0, bytesRead));
             }
             String strJson = jsonBuilder.toString();
-            if(strJson.substring(0,1).equals("[")){
+
+            if(strJson.substring(0,1).equals("[")){     //in case the server returns the JSONArray, convert it to the JSONObject format
                 strJson = "{\"series\":" + strJson + "}";
             }
             JSONObject jsonObject = new JSONObject(strJson);
@@ -91,6 +87,6 @@ public class JSONDownloader extends AsyncTask<String, Void, JSONObject> {
         if(jsonFromCache==null){
             CacheManager.getInstance().addJsonToCache(mUrl, result);
         }
-        mDownloaderTasks.afterProcess(result);
+        mDownloaderTasks.afterProcess(result);      //pass the result JSONObject to the view
     }
 }

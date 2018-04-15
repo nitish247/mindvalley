@@ -21,10 +21,10 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
 
     public void fetch() {
         Bitmap bitmapFromCache = CacheManager.getInstance().checkImageInCache(mUrl);
-        if(bitmapFromCache==null){
+        if(bitmapFromCache==null){  //Fetch the image from the server upon cache miss
             this.execute(mUrl);
         }
-        else {
+        else {      //Fetch the bitmap from cache upon cache hit
             this.onPostExecute(bitmapFromCache);
             Log.d("Cache", "Found image in cache");
         }
@@ -57,6 +57,6 @@ public class ImageDownloader extends AsyncTask<String, Void, Bitmap> {
         if(bitmapFromCache==null){
             CacheManager.getInstance().addImageToCache(mUrl, result);
         }
-        mDownloaderTasks.afterProcess(result);
+        mDownloaderTasks.afterProcess(result);      //pass the bitmap to the view
     }
 }

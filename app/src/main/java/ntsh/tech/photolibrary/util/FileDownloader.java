@@ -32,7 +32,7 @@ public class FileDownloader extends AsyncTask<String, Integer, File> {
     @Override
     protected void onProgressUpdate(Integer... values) {
         super.onProgressUpdate(values);
-        mDownloaderTasks.updateProgress(values[0]);
+        mDownloaderTasks.updateProgress(values[0]);     //pass the value the view
 
     }
 
@@ -83,7 +83,7 @@ public class FileDownloader extends AsyncTask<String, Integer, File> {
             try {
                 if (output != null) {
                     output.close();
-                    downloadedFileRef = new File(mFileName);
+                    downloadedFileRef = new File(mFileName);    //get the File reference to the downloaded file
                 }
                 if (input != null)
                     input.close();
@@ -99,6 +99,6 @@ public class FileDownloader extends AsyncTask<String, Integer, File> {
 
     @Override
     protected void onPostExecute(File downloadedFile) {
-        mDownloaderTasks.afterProcess(downloadedFile);
+        mDownloaderTasks.afterProcess(downloadedFile);      //pass the downloaded File reference to the view
     }
 }

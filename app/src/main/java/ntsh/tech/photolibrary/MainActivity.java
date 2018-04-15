@@ -37,6 +37,7 @@ public class MainActivity extends AppCompatActivity {
     private final String source = "http://pastebin.com/raw/wgkJgazE";
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private List<String> urlsList = new ArrayList<>();
+    private List<String> largeUrlsList = new ArrayList<>();
     private CustomGrid gridAdapter;
     private TextView txtDownloadProgress;
     private FloatingActionButton fab;
@@ -66,7 +67,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onRefresh() {
                 urlsList.clear();
-                gridAdapter.notifyDataSetChanged();
+                largeUrlsList.clear();
+                if(gridAdapter!=null)
+                    gridAdapter.notifyDataSetChanged();
                 CacheManager.getInstance().clearCache();
                 loadDataFromServer();
 
@@ -84,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void downloadFile() {
-
+        //Asks for the Storage permission if not present
         if(!checkStoragePermission(MainActivity.this)){
             List<String> permissionsList=new ArrayList<>();
             permissionsList.add("android.permission.READ_EXTERNAL_STORAGE");
@@ -123,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Loads data from the URL in JSON format
     private void loadDataFromServer() {
         ResourceLoader.getInstance().loadJSON(MainActivity.this, source, new LoaderResponseListener<JSONObject>() {
             @Override
@@ -148,14 +152,17 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    //Initializes content using data in JSON from the server
     private void initialize(JSONObject jsonResponse) throws JSONException {
         JSONArray usersArray = jsonResponse.getJSONArray("series");
         JSONObject firstUser = (JSONObject) usersArray.get(0);
         JSONObject firstUserData = (JSONObject) firstUser.get("user");
-        JSONObject firstProfileImages = (JSONObject) firstUserData.get("profile_image");
+        JSONObject firstProfileImages = (JSONObject) firstUserData.get("profile_image");   //gets profile image of the first user
         String userName = firstUserData.getString("name");
 
         ((TextView)findViewById(R.id.userProfileName)).setText(userName);
+
+        //Abstract image loader
         ResourceLoader.getInstance().loadImage(MainActivity.this,
                 firstProfileImages.getString("medium"),
                 R.id.userProfileImage,
@@ -168,13 +175,15 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d("array", usersArray.toString());
 
+        //Store URL one image from each user in an ArrayList
         for(int i=0;i<usersArray.length();i++){
             JSONObject userData = (JSONObject) usersArray.get(i);
             JSONObject urlsData = (JSONObject) userData.get("urls");
-            urlsList.add(urlsData.getString("thumb"));
+            urlsList.add(urlsData.getString("thumb"));  //URLs for thumbnails
+            largeUrlsList.add(urlsData.getString("regular"));   //URL for loading image when the user clicks on any thumbnail
         }
 
-        gridAdapter = new CustomGrid(MainActivity.this, urlsList);
+        gridAdapter = new CustomGrid(MainActivity.this, urlsList, largeUrlsList);   //Initialize gridAdapter
         GridView grid=(GridView)findViewById(R.id.grid);
         grid.setAdapter(gridAdapter);
     }
