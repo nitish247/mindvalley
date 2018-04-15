@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="ntsh.tech.photolibrary.MainActivity">
+
+    <ImageView
+        android:id="@+id/userProfileImage"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:src="@mipmap/dummyimage"
+        />
+
+    <TextView
+        android:id="@+id/userProfileName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textStyle="bold"
+        android:layout_below="@id/userProfileImage"
+        android:text="@string/user_name"/>
+
+    <View
+        android:id="@+id/separator"
+        android:layout_width="fill_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/userProfileName"
+        android:background="#c0c0c0"/>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/separator"
+        >
+        <GridView
+            android:numColumns="auto_fit"
+            android:gravity="center"
+            android:columnWidth="150dp"
+            android:stretchMode="columnWidth"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:id="@+id/grid"
+            />
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="45dp"
+        android:background="@color/colorAccent"
+        android:src="@mipmap/icn_download" />
+
+    <TextView
+        android:id="@+id/downloadProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/fab"
+        android:layout_alignTop="@+id/userProfileImage"
+        android:layout_marginEnd="24dp"
+        android:text="" />
+
+</RelativeLayout>
